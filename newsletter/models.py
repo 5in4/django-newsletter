@@ -363,10 +363,8 @@ class Subscription(models.Model):
             'MEDIA_URL': settings.MEDIA_URL
         }
 
-        unescaped_context = Context(variable_dict, autoescape=False)
-
-        subject = subject_template.render(unescaped_context).strip()
-        text = text_template.render(unescaped_context)
+        subject = subject_template.render(variable_dict).strip()
+        text = text_template.render(variable_dict)
 
         message = EmailMultiAlternatives(
             subject, text,
@@ -375,10 +373,8 @@ class Subscription(models.Model):
         )
 
         if html_template:
-            escaped_context = Context(variable_dict)
-
             message.attach_alternative(
-                html_template.render(escaped_context), "text/html"
+                html_template.render(variable_dict), "text/html"
             )
 
         message.send()
